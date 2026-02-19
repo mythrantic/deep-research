@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
 mcp = FastMCP(
-    name="GPT Researcher"
+    name="Deep Researcher"
 )
 
 # Initialize researchers dictionary
@@ -93,7 +93,7 @@ async def research_resource(topic: str) -> str:
 @mcp.tool()
 async def deep_research(query: str) -> Dict[str, Any]:
     """
-    Conduct a web deep research on a given query using GPT Researcher. 
+    Conduct a web deep research on a given query using Deep Researcher. 
     Use this tool when you need time-sensitive, real-time information like stock prices, news, people, specific knowledge, etc.
     
     Args:
@@ -258,7 +258,7 @@ async def get_research_context(research_id: str) -> Dict[str, Any]:
 @mcp.prompt()
 def research_query(topic: str, goal: str, report_format: str = "research_report") -> str:
     """
-    Create a research query prompt for GPT Researcher.
+    Create a research query prompt for Deep Researcher.
     
     Args:
         topic: The topic to research
@@ -276,13 +276,9 @@ async def health_check(request):
 
 def run_server():
     """Run the MCP server using FastMCP's built-in event loop handling."""
-    # Check if API keys are set
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("OPENAI_API_KEY not found. Please set it in your .env file.")
-        return
 
     # Determine transport based on environment
-    transport = os.getenv("MCP_TRANSPORT", "stdio").lower()
+    transport = os.getenv("MCP_TRANSPORT", "streamable-http").lower()
     
     # Auto-detect Docker environment
     if os.path.exists("/.dockerenv") or os.getenv("DOCKER_CONTAINER"):
@@ -290,9 +286,8 @@ def run_server():
         logger.info("Docker environment detected, using SSE transport")
     
     # Add startup message
-    logger.info(f"Starting GPT Researcher MCP Server with {transport} transport...")
-    print(f"🚀 GPT Researcher MCP Server starting with {transport} transport...")
-    print("   Check researcher_mcp_server.log for details")
+    logger.info(f"Starting Deep Researcher MCP Server with {transport} transport...")
+    print(f"🚀 Deep Researcher MCP Server starting with {transport} transport...")
 
     # Let FastMCP handle the event loop
     try:
@@ -302,7 +297,7 @@ def run_server():
         elif transport == "sse":
             mcp.run(transport="sse", host="0.0.0.0", port=8000)
         elif transport == "streamable-http":
-            mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
+            mcp.run(transport="streamable-http", host="0.0.0.0", port=8009)
         else:
             raise ValueError(f"Unsupported transport: {transport}")
             
