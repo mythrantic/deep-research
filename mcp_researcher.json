@@ -1,9 +1,6 @@
 {
 	"servers": {
-		"deep-research": {
-			"type": "http",
-			"url": "https://deep-research.valiantlynx.com/mcp"
-		}
+
 	},
 	"inputs": []
 }
