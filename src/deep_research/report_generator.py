@@ -31,6 +31,12 @@ class ReportGenerator(BaseAgent):
             mcp_config_path="mcp_researcher.json"
         )
     
+    async def run(self, context: str = "", sources: List[Dict[str, Any]] = None, 
+                  custom_prompt: str = "", query: str = "") -> str:
+        """Required abstract method implementation."""
+        sources = sources or []
+        return await self.generate(context, sources, custom_prompt, query)
+    
     async def generate(self, context: str, sources: List[Dict[str, Any]], 
                       custom_prompt: str, query: str) -> str:
         """
