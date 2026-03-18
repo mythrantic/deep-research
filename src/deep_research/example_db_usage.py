@@ -1,14 +1,59 @@
 import logging
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from deep_research.db_manager import LanceDBManager  # Import LanceDBManager
 import hashlib
 import numpy as np
 
-router = APIRouter()
+router = FastAPI()
 
 # Initialize with local storage by default
 db_manager = LanceDBManager()
+
+@router.get("/api/list-tables/", tags=["Database"])
+def list_tables():
+    """
+    Lists all tables in the database.
+
+    Returns:
+        dict: A list of table names.
+
+    Raises:
+        HTTPException: If an error occurs while listing tables.
+    """
+    try:
+        tables = db_manager.list_tables()
+        return {"tables": tables}
+    except Exception as e:
+        logging.exception("Exception occurred in list_tables: %s", str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post("/api/create-table/", tags=["Database"])
+async def create_table(request: Request):
+    """
+    Creates a new table in the database.
+
+    Args:
+        request (Request): Body: {"table": "table_name"}
+
+    Returns:
+        dict: Success message. and the result of the operation.
+
+    Raises:
+        HTTPException: If an error occurs while creating the table.
+    """
+    try:
+        data = await request.json()
+        table = data["table"]
+        schema = data.get("schema")
+        # turn schema dict an instance of pyarrow schema        if schema:
+        import pyarrow as pa
+        schema = pa.schema(schema)
+        db_manager.create_table(table, schema=schema)
+        return {"success": True, "message": f"Table '{table}' created successfully"}
+    except Exception as e:
+        logging.exception("Exception occurred in create_table: %s", str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/api/add-data/", tags=["Database"])

@@ -177,3 +177,5 @@ cython_debug/
 
 .env
 mcp-publisher
+
+lancedb_data/
