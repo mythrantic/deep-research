@@ -18,6 +18,9 @@ dependencies = [
     "uvicorn>=0.38.0",
     "machine-core",
     "pydantic-ai-slim[duckduckgo]>=1.33.0",
+    "pandas>=3.0.1",
+    "numpy>=2.4.3",
+    "lancedb>=0.30.0",
 ]
 [build-system]
 requires = ["uv_build>=0.8.17,<0.9.0"]
